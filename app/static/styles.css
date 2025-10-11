@@ -1,0 +1,220 @@
+
+
+:root
+{
+    --darkblack: #0d2b45;
+    --lightblack: #203c56;
+    --darkpurple: #544e68 ;
+    --lightPurple: #8d697a;
+    --darkorange: #d08159;
+    --lightorange: #ffaa5e;
+    --darkwhite: #ffd4a3;
+    --lightwhite: #ffecd6;
+}
+
+html, body
+{
+        height: 100%;
+        margin: 0; /* Remove default margin for full coverage */
+        padding: 0; /* Remove default padding for full coverage */
+        font-family: Verdana;
+}
+
+.like-comment, .like_btn
+{
+  background-color: var(--darkpurple);
+  border: 2px dashed var(--lightPurple);
+  border-radius: 25px;
+  color: var(--lightorange);
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+}
+
+.topnav
+{
+ 	display: flex; 
+ 	justify-content: center;
+  	align-items: center;
+  	width: 50%;
+  	overflow: hidden;
+}
+.navtitle
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: large;
+	color: var(--darkwhite);
+	/*filter: drop-shadow(10px 10px 10px var(--darkwhite));*/
+    /*text-shadow: 1px 1px #000000, 2px 2px #fffdfd, 3px 3px #ca9703;*/
+    margin-right: 125px;
+
+
+}
+.navbar
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 50px;
+}
+.navbar ul
+{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+.navbar li a
+{
+    display: block;
+    color: var(--darkwhite);
+    padding: 10px;
+    text-decoration: none;
+    border-radius: 20px;
+}
+.navbar ul li a:hover
+{
+    background-color: var(--lightPurple);
+    border-radius: 20px;
+}
+.navlogin
+{
+	margin-right: 15px;
+}
+.navimage
+{
+	max-width: 100%; /* Image will not exceed its container's width */
+  	height: auto; /* Maintain aspect ratio */
+}
+
+body
+{
+	background-color: var(--darkblack);
+    color: var(--lightwhite);
+}
+
+.scrolling-wrapper
+{
+    height: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 25px;
+    scrollbar-width: 10%;
+    scrollbar-color: var(--lightorange);
+}
+
+.card
+{
+    flex: 0 0 auto;
+	margin: 10px;
+	padding: 25px;
+    min-width: 200px;
+	width: 25%;
+	border-radius: 15px;
+	border-style: double;
+	color: var(--lightwhite);
+	background-image: linear-gradient(to bottom, var(--darkpurple) ,var(--lightPurple));
+}
+.card h1
+{
+	filter: drop-shadow(10px 10px 10px rgba(.9, .1, .5, 0.99));
+	color: var(--darkwhite);
+}
+.card a
+{
+	filter: drop-shadow(10px 10px 10px rgba(.9, .1, .5, 0.99));
+	color:  var(--darkwhite);
+	text-shadow: 2px 1px var(--darkpurple), -2px -1px var(--darkpurple);
+}
+
+.comment_card
+{
+    background: var(--lightblack);
+    border-radius: 10px;
+    max-width: 50%;
+    padding: 10px;
+    margin: 20px;
+    color: white;
+}
+
+.project_browse_list
+{
+  display: flex;
+  flex-direction: row;
+  flex-flow: wrap;
+}
+
+.common_table
+{
+    border-collapse: collapse;
+    width: 100%;
+    color: white;
+}
+
+.common_table th,td
+{
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+.common_table tr:hover
+{
+    background-color: coral;
+}
+
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea
+{
+    padding: 12px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #555;
+    border-radius: 10px;
+    background-color: var(--lightblack);
+    color: var(--lightorange);
+    outline: none;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+textarea:focus
+{
+    color: var(--lightwhite);
+    background-color: var(--lightPurple);
+}
+
+.ql-editor {
+    background-color: var(--lightblack);
+    border-radius: 25px;
+    border: #ffaa5e ;
+    border-style: dashed;
+}
+
+.ql-toolbar
+{
+    background-color: var(--lightPurple);
+    color: var(--lightorange);
+    border-radius: 25px;
+
+}
+
+.ql-formats
+{
+    background-color: var(--lightorange);
+    border-radius: 25px;
+}

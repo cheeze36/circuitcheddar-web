@@ -1,0 +1,51 @@
+<!doctype html>
+
+
+
+
+<title>{% block title %}{% endblock %} - CircuitCheddar</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='./styles.css') }}">
+<nav class="topnav">
+	<div class="navcenter">
+
+        <div class="navtitle">
+  		<img src="{{ url_for('static', filename='images/temp_logo2.png') }}" alt="logo">
+
+            <h1>CIRCUIT-CHEDDAR</h1>
+        </div>
+        <br>
+        <hr>
+        <div class="navbar">
+            <ul>
+                <li><a href="{{ url_for('app/home.index') }}">Home</a></li>
+                <li><a href="{{ url_for('app/projects.browse') }}">Projects</a></li>
+                <li><a href="#news">News</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            <div class="navlogin">
+                <ul>
+                    {% if g.user %}
+                      <li><span><a href="{{ url_for('app/auth.logout') }}">{{ g.user['username'] }}</a>
+                      <li><a href="{{ url_for('app/auth.logout') }}">Log Out</a></span>
+                    {% else %}
+                      <li><span><a href="{{ url_for('app/auth.register') }}">Register</a>
+                      <li><a href="{{ url_for('app/auth.login') }}">Log In</a></span>
+                    {% endif %}
+                 </ul>
+	        </div>
+        </div>
+
+  	</div>
+
+  <hr>
+</nav>
+<section class="content">
+  <header>
+    {% block header %}{% endblock %}
+  </header>
+  {% for message in get_flashed_messages() %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+  {% block content %}{% endblock %}
+</section>

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Browse Projects{% endblock %}</h1>
+  {% if g.user %}
+    <a class="action" href="{{ url_for('app/projects.create') }}">New</a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="project_browse_list">
+  {% for post in posts %}
+    <div class="card">
+    <article class="post">
+      <header>
+        <div>
+          <h1><a href="{{ url_for('app/projects.project', id=post['id']) }}">{{ post['title'] }}</a> </h1>
+          <div class="about">by {{ post['username'] }} on {{ post['created'].strftime('%Y-%m-%d') }}</div>
+        </div>
+        {% if g.user['id'] == post['author_id'] %}
+          <a class="action" href="{{ url_for('app/projects.update', id=post['id']) }}">Edit</a>
+        {% endif %}
+      </header>
+        <span><p>{{ post['description'] }}</p></span>
+    </article>
+    </div>
+
+
+  {% endfor %}
+</div>
+{% endblock %}

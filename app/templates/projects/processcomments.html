@@ -1,0 +1,22 @@
+{% for comment in comments %}
+        <li>
+            <div class="comment_card">
+                <strong>{{ comment['username']}}</strong>
+                {% if g.user['id'] == comment['author_id'] %}
+                    <button class="delete-comment" data-comment-id="{{ comment['id'] }}">delete</button>
+
+                {% endif %}
+                {% if g.user['id'] != None %}
+                    <button class="like-comment" data-comment-id="{{ comment['id'] }}">{{ get_comment_like_count(comment['id'])[1] }} {{ get_comment_like_count(comment['id'])[0] }}</button>
+                {% endif %}
+                <br>
+                {{ comment['created'] }}
+                <br>
+                {{ comment['body'] }}
+
+                <br>
+            </div>
+
+        </li>
+    <hr>
+    {% endfor %}

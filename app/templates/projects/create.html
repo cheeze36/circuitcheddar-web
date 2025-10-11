@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}New Post{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
+    <form method="post">
+      <label for="title">Title</label>
+      <input type = "text", name="title" id="title" value="{{ request.form['title'] }}" required>
+        <br><br>
+        <label for="description">Description</label>
+        <br>
+        <textarea name="description" id="description" rows="3" cols="150"></textarea>
+      <input type="hidden" name="quill-html" id="quill-html">
+        <br>
+        <br>
+      <label for="editor">Body</label>
+        <br>
+        <div id="editor">
+             <p>type here...</p>
+        </div>
+    <input type="submit" value="Save">
+      <script src="{{ url_for('static', filename='./scripts/editor.js') }}">
+        </script>
+  </form>
+
+{% endblock %}

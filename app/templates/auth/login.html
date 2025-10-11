@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}Log In{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class="flash">
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+<form method="post">
+    <label for="email">Email</label>
+    <br>
+    <input type="email" name="email" id="email" required placeholder="you@example.com">
+    <br>
+    <label for="password">Password</label>
+    <br>
+    <input type="password" name="password" id="password" required placeholder="Enter your password">
+    <br>
+    <input type="submit" value="Log In" class="submit_btn">
+    <p>Don't have an account? <a href="{{ url_for('app/auth.register') }}">Register here</a>.</p>
+</form>
+{% endblock %}

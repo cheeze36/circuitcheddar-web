@@ -1,0 +1,166 @@
+DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS post;
+DROP TABLE IF EXISTS project_comments;
+DROP TABLE IF EXISTS comment_reply;
+DROP TABLE IF EXISTS notification;
+DROP TABLE IF EXISTS follower;
+DROP TABLE IF EXISTS session;
+DROP TABLE IF EXISTS like;
+
+CREATE TABLE user (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    email TEXT NOT NULL,
+    role TEXT NOT NULL DEFAULT 'USER'
+);
+
+CREATE TABLE post (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    author_id INTEGER NOT NULL,
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    body TEXT NOT NULL,
+    thumbnail TEXT,
+    FOREIGN KEY (author_id) REFERENCES user (id)
+);
+
+CREATE TABLE project_comments(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    author_id INTEGER NOT NULL ,
+    post_id INTEGER NOT NULL,
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    body TEXT NOT NULL,
+    FOREIGN KEY (author_id) REFERENCES user (id),
+    FOREIGN KEY (post_id) REFERENCES post (id)
+);
+
+CREATE TABLE comment_reply(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    author_id INTEGER NOT NULL ,
+    comment_id INTEGER NOT NULL,
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    body TEXT NOT NULL,
+    FOREIGN KEY (author_id) REFERENCES user (id),
+    FOREIGN KEY (comment_id) REFERENCES project_comments (id)
+);
+
+CREATE TABLE notification(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL ,
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    n_text TEXT not null,
+    link TEXT,
+    FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE
+);
+
+CREATE TABLE follower (
+    follower_id INTEGER NOT NULL,
+    following_id INTEGER NOT NULL,
+    followed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (follower_id, following_id),
+    FOREIGN KEY (follower_id) REFERENCES user(id) ON DELETE CASCADE,
+    FOREIGN KEY (following_id) REFERENCES user(id) ON DELETE CASCADE
+);
+
+CREATE TABLE session(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    ip_address TEXT NOT NULL,
+    user_agent TEXT DEFAULT 'NONE',
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user (id)
+);
+
+CREATE TABLE like(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    post_id INTEGER,
+    comment_id INTEGER,
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user (id),
+    FOREIGN KEY (post_id) REFERENCES post (id),
+    FOREIGN KEY (comment_id) REFERENCES project_comments (id),
+    CHECK ((post_id IS NOT NULL AND comment_id IS NULL) OR (post_id IS NULL AND comment_id IS NOT NULL))
+);
+
+CREATE TABLE tag(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE post_tag (
+    post_id INTEGER NOT NULL,
+    tag_ID INTEGER NOT NULL,
+    PRIMARY KEY (post_id, tag_ID),
+    FOREIGN KEY (post_id) REFERENCES post (id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_ID) REFERENCES tag (id) ON DELETE CASCADE
+);
+
+CREATE TABLE message (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sender_id INTEGER NOT NULL,
+    receiver_id INTEGER NOT NULL,
+    content TEXT NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES user (id) ON DELETE CASCADE,
+    FOREIGN KEY (receiver_id) REFERENCES  user (id) ON DELETE CASCADE
+);
+
+CREATE TABLE activity_log(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    action TEXT NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE bookmark(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL ,
+    post_id INTEGER NOT NULL,
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE ,
+    FOREIGN KEY (post_id) REFERENCES post (id) ON DELETE CASCADE
+);
+
+CREATE TABLE view_log(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL ,
+    post_id INTEGER NOT NULL,
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user (id),
+    FOREIGN KEY (post_id) REFERENCES post (id)
+
+);
+
+CREATE TABLE category(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL
+);
+
+CREATE TABLE post_category(
+    post_id INTEGER NOT NULL,
+    category_id INTEGER NOT NULL,
+    PRIMARY KEY (post_id, category_id),
+    FOREIGN KEY (post_id) REFERENCES post (id) ON DELETE CASCADE,
+    FOREIGN KEY (category_ID) REFERENCES category (id) ON DELETE CASCADE
+);
+
+CREATE TABLE badge(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL ,
+    description TEXT NOT NULL
+);
+
+CREATE TABLE user_badge(
+    user_id INTEGER NOT NULL ,
+    badge_id INTEGER NOT NULL ,
+    PRIMARY KEY (user_id, badge_id),
+    FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE,
+    FOREIGN KEY (badge_id) REFERENCES badge (id) ON DELETE CASCADE
+);
+
+

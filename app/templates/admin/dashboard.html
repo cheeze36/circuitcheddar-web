@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block header %}
+
+<h1>ADMIN DASHBOARD</h1>
+<br>
+<hr>
+<hr>
+<br>
+
+{% endblock %}
+
+{% block content %}
+<div class="user_list">
+    <h2>user list</h2>
+    <table class = "common_table">
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user["username"] }}</td>
+            <td>{{ user["email"] }}</td>
+            <td>{{ user["role"] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
