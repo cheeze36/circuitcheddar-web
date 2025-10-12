@@ -156,10 +156,10 @@ def project(id):
     except:
         has_liked = 0
     if has_liked < 1:
-        liked_btn = "Unlike"
+        liked_btn = "Like"
 
     else:
-        liked_btn = "Like"
+        liked_btn = "Unlike"
     return render_template('projects/project.html', post=post, comments=comments,
                            likes = likes, liked_btn = liked_btn,
                            get_comment_like_count = get_comment_like_count)
