@@ -44,4 +44,7 @@ def create_app(test_config=None):
     from . import admin
     app.register_blueprint(admin.bp)
 
+    from . import articles
+    app.register_blueprint(articles.bp)
+
     return app

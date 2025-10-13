@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Project = "{{ post['title'] }}"{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<button class="like_btn" name="post_like_submit" id='likebtn'> {{ liked_btn }} {{ likes }} </button>
+<hr>
+<span name="projectBody" id="projectBody">{{ post['body'] | safe}}</span>
+<hr>
+<input type="hidden" id="post_id" value="{{ post['id'] }}">
+<div>
+<h2>Comments_</h2>
+
+<ul id="commentlist">
+    {% for comment in comments %}
+        <li>
+            <div class="comment_card">
+                <strong>{{ comment['username']}}</strong>
+                {% if g.user['id'] == comment['author_id'] %}
+                    <button class="delete-comment" data-comment-id="{{ comment['id'] }}">delete</button>
+
+                {% endif %}
+                {% if g.user['id'] != None %}
+                    <button class="like-comment" data-comment-id="{{ comment['id'] }}">{{ get_comment_like_count(comment['id'])[1] }} {{ get_comment_like_count(comment['id'])[0] }}</button>
+                {% endif %}
+                <br>
+                {{ comment['created'] }}
+                <br>
+                {{ comment['body'] }}
+
+                <br>
+            </div>
+
+        </li>
+    <hr>
+    {% endfor %}
+</ul>
+
+<form id="commentform" >
+    <label for="comment">Comment:</label>
+    <textarea name="comment" id="comment" required></textarea>
+
+    <button name="comment_submit" id='submitb'>Submit</button>
+</form>
+</div>
+<script type="application/javascript" src="{{ url_for('static', filename='./scripts/commentreloader.js') }}">
+
+    </script>
+{% endblock %}

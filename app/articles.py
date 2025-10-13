@@ -8,17 +8,17 @@ from werkzeug.exceptions import abort
 from app.auth import login_required
 from app.db import get_db
 
-bp = Blueprint('app/projects', __name__, url_prefix='/projects')
+bp = Blueprint('app/articles', __name__, url_prefix='/articles')
 
 @bp.route('/browse', methods=('GET', 'POST'))
 def browse():
     db = get_db()
     posts = db.execute(
         'SELECT p.id, title, description, body, created, author_id, username'
-        ' FROM post p JOIN user u ON p.author_id = u.id WHERE p.type = "PROJECT"'
+        ' FROM post p JOIN user u ON p.author_id = u.id WHERE p.type = "ARTICLE"'
         ' ORDER BY created DESC'
     ).fetchall()
-    return render_template('projects/browse_all_projects.html', posts=posts)
+    return render_template('articles/browse_all_articles.html', posts=posts)
 
 
 @bp.route('/create', methods=('GET', 'POST'))
@@ -40,12 +40,12 @@ def create():
             db.execute(
                 'INSERT INTO post (title, description, body, author_id, type)'
                 ' VALUES (?, ?, ?, ?, ?)',
-                (title,description, body, g.user['id'],"PROJECT")
+                (title,description, body, g.user['id'], "ARTICLE")
             )
             db.commit()
             return redirect(url_for('app/home.index'))
 
-    return render_template('projects/create.html')
+    return render_template('articles/create.html')
 
 def get_post_unauth(id):
     post = get_db().execute(
@@ -58,7 +58,7 @@ def get_post_unauth(id):
 
 def get_post(id, check_author=True):
     post = get_db().execute(
-        'SELECT p.id, title, body, created, author_id, username'
+        'SELECT p.id, title, p.description, body, created, author_id, username'
         ' FROM post p JOIN user u ON p.author_id = u.id'
         ' WHERE p.id = ?',
         (id,)
@@ -80,7 +80,8 @@ def update(id):
 
     if request.method == 'POST':
         title = request.form['title']
-        body = request.form['body']
+        description = request.form['description']
+        body = request.form['quill-html']
         error = None
 
         if not title:
@@ -91,14 +92,14 @@ def update(id):
         else:
             db = get_db()
             db.execute(
-                'UPDATE post SET title = ?, body = ?'
+                'UPDATE post SET title = ?,description = ?, body = ?'
                 ' WHERE id = ?',
-                (title, body, id)
+                (title, description,body, id)
             )
             db.commit()
             return redirect(url_for('app/home.index'))
 
-    return render_template('projects/update.html', post=post)
+    return render_template('articles/update.html', post=post)
 
 def get_comments(id):
      comments = get_db().execute(
@@ -138,15 +139,15 @@ def processcomments():
         add_comment(post_id, g.user['id'], comment)
 
     comments = get_comments(post_id)
-    a = jsonify(html=render_template("projects/processcomments.html", comments=comments,
+    a = jsonify(html=render_template("articles/processcomments.html", comments=comments,
                                      get_comment_like_count = get_comment_like_count)) # Fetch after insertion
     print(a)
     return a
 
 
 
-@bp.route('/<int:id>/project',methods=('GET',))
-def project(id):
+@bp.route('/<int:id>/article',methods=('GET',))
+def article(id):
     post = get_post_unauth(id)
     comments = get_comments(id)
     likes = get_db().execute("SELECT COUNT(*) FROM like WHERE post_id = ?", (id,)).fetchone()[0]
@@ -160,7 +161,7 @@ def project(id):
 
     else:
         liked_btn = "Unlike"
-    return render_template('projects/project.html', post=post, comments=comments,
+    return render_template('articles/article.html', post=post, comments=comments,
                            likes = likes, liked_btn = liked_btn,
                            get_comment_like_count = get_comment_like_count)
 
