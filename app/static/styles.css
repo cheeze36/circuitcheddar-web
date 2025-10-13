@@ -34,14 +34,12 @@ html, body
   cursor: pointer;
 }
 
-}
 
 .topnav
 {
- 	display: flex; 
  	justify-content: center;
   	align-items: center;
-  	width: 50%;
+  	width: 100%;
   	overflow: hidden;
 }
 .navtitle
@@ -70,7 +68,7 @@ html, body
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     width: 100%;
 }
 .navbar li a
@@ -112,6 +110,7 @@ body
     padding: 25px;
     scrollbar-width: 10%;
     scrollbar-color: var(--lightorange);
+    margin-inline: 10%;
 }
 
 .card

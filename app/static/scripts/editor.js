@@ -26,6 +26,10 @@
                  // args[0] will be old range
                 }
             });
+            const hidden_body_html = document.getElementById('hidden_body').textContent
+            quill.clipboard.dangerouslyPasteHTML(0,document.getElementById('hidden_body').textContent);
+
+
 
         //var html = quill.root.innerHTML;
         //document.getElementById('quill-html').value = html;
