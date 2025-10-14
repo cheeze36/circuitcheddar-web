@@ -51,7 +51,8 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(data => {
             commentList.innerHTML = data.html;
             commentField.value = '';
-            attachDeleteHandlers(); // Re-bind delete buttons
+            attachCommentDeleteHandlers();
+            attachCommentLikeHandlers()// Re-bind delete buttons
             commentList.scrollTop = commentList.scrollHeight;
         })
         .catch(error => console.error('Error submitting comment:', error))
@@ -61,7 +62,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Delete a comment
-    function attachCommentDeleteHandlers() {
+    function attachCommentDeleteHandlers()
+    {
         document.querySelectorAll('.delete-comment').forEach(button => {
             button.addEventListener('click', function () {
                 const commentId = this.getAttribute('data-comment-id');
@@ -94,7 +96,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     };
 
-    function attachCommentLikeHandlers() {
+    function attachCommentLikeHandlers()
+    {
         document.querySelectorAll('.like-comment').forEach(button => {
             button.addEventListener('click', function () {
                 const commentId = this.getAttribute('data-comment-id');
@@ -111,9 +114,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     button.textContent = data.btn_text + " " + data.number ;
                 })
                 .catch(error => console.error('Error submitting like:', error))
-                .finally(() => {
-                    likeButton.disabled = false;
-                });
             });
         });
     };
