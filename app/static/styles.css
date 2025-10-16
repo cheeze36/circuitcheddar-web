@@ -96,7 +96,8 @@ html, body
 
 body
 {
-	background-color: var(--darkblack);
+    background-image: linear-gradient(to right, var(--darkblack),var(--lightblack) ,var(--darkblack));
+    background-attachment: fixed;
     color: var(--lightwhite);
 }
 
@@ -216,4 +217,34 @@ textarea:focus
 {
     background-color: var(--lightorange);
     border-radius: 25px;
+}
+
+.selection_options
+{
+    background-color: var(--darkpurple);
+    border: 2px dashed var(--lightPurple);
+    border-radius: 5px;
+    color: var(--lightwhite);
+    padding: 5px 10px;
+    text-align: center;
+    font-size: 12px;
+    cursor: pointer;
+}
+button
+{
+    background-color: var(--darkpurple);
+    border: 2px dashed var(--lightPurple);
+    border-radius: 25px;
+    color: var(--lightwhite);
+    padding: 5px 10px;
+    text-align: center;
+    font-size: 12px;
+    cursor: pointer;
+}
+footer
+{
+    display: flex;
+    justify-content: center;
+    background: var(--darkpurple);
+    color: var(--lightorange);
 }

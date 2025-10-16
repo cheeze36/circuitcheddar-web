@@ -8,7 +8,22 @@
 {% endblock %}
 
 {% block content %}
+<form method="get" class="filter-form">
+  <label for="tag">Filter by Tag:</label>
+  <select name="tag" id="tag" class="selection_options">
+    <option value="">All Tags</option>
+    {% for tag in all_tags %}
+      <option value="{{ tag.name }}" {% if tag.name == selected_tag %}selected{% endif %}>{{ tag.name }}</option>
+    {% endfor %}
+  </select>
+
+
+  <button type="submit">Apply Filters</button>
+</form>
+
+
 <div class="project_browse_list">
+
   {% for post in posts %}
     <div class="card">
     <article class="post">
