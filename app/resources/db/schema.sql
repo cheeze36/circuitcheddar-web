@@ -9,9 +9,8 @@ DROP TABLE IF EXISTS like;
 DROP TABLE IF EXISTS tag;
 DROP TABLE IF EXISTS post_tag;
 DROP TABLE IF EXISTS message;
-DROP TABLE IF EXISTS acitivity_log;
+DROP TABLE IF EXISTS activity_log;
 DROP TABLE IF EXISTS bookmark;
-DROP TABLE IF EXISTS view_log;
 DROP TABLE IF EXISTS view_log;
 DROP TABLE IF EXISTS category;
 DROP TABLE IF EXISTS post_category;
@@ -55,7 +54,7 @@ CREATE TABLE comment_reply(
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     body TEXT NOT NULL,
     FOREIGN KEY (author_id) REFERENCES user (id),
-    FOREIGN KEY (comment_id) REFERENCES project_comments (id)
+    FOREIGN KEY (comment_id) REFERENCES post_comments (id)
 );
 
 CREATE TABLE notification(
@@ -93,7 +92,7 @@ CREATE TABLE like(
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user (id),
     FOREIGN KEY (post_id) REFERENCES post (id),
-    FOREIGN KEY (comment_id) REFERENCES project_comments (id),
+    FOREIGN KEY (comment_id) REFERENCES post_comments (id),
     CHECK ((post_id IS NOT NULL AND comment_id IS NULL) OR (post_id IS NULL AND comment_id IS NOT NULL))
 );
 

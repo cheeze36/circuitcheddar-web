@@ -10,16 +10,35 @@ from app.db import get_db
 
 bp = Blueprint('app/projects', __name__, url_prefix='/projects')
 
-@bp.route('/browse', methods=('GET', 'POST'))
+@bp.route('/browse', methods=('GET',))
 def browse():
     db = get_db()
-    posts = db.execute(
-        'SELECT p.id, title, description, body, created, author_id, username'
-        ' FROM post p JOIN user u ON p.author_id = u.id WHERE p.type = "PROJECT"'
-        ' ORDER BY created DESC'
-    ).fetchall()
-    return render_template('projects/browse_all_projects.html', posts=posts)
+    tag_filter = request.args.get('tag', '').strip().lower()
 
+    # Fetch all tags for dropdown
+    all_tags = db.execute('SELECT name FROM tag ORDER BY name ASC').fetchall()
+
+    query = '''
+        SELECT DISTINCT p.id, p.title, p.description, p.body, p.created, p.author_id, u.username
+        FROM post p
+        JOIN user u ON p.author_id = u.id
+        LEFT JOIN post_tag pt ON p.id = pt.post_id
+        LEFT JOIN tag t ON pt.tag_id = t.id
+    '''
+    conditions = []
+    params = []
+    conditions.append('p.type = "PROJECT"')
+    if tag_filter:
+        conditions.append('t.name = ?')
+        params.append(tag_filter)
+
+    if conditions:
+        query += ' WHERE ' + ' AND '.join(conditions)
+
+    query += ' ORDER BY p.created DESC'
+
+    posts = db.execute(query, params).fetchall()
+    return render_template('projects/browse_all_projects.html', posts=posts, all_tags=all_tags, selected_tag=tag_filter)
 
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
@@ -27,6 +46,8 @@ def create():
     if request.method == 'POST':
         title = request.form['title']
         description = request.form['description']
+        raw_tags = request.form['tags']
+        tag_names = [t.strip().lower() for t in raw_tags.split(',') if t.strip()]
         body = request.form['quill-html']
         error = None
 
@@ -37,12 +58,22 @@ def create():
             flash(error)
         else:
             db = get_db()
-            db.execute(
+            cursor = db.cursor()
+            cursor.execute(
                 'INSERT INTO post (title, description, body, author_id, type)'
                 ' VALUES (?, ?, ?, ?, ?)',
                 (title,description, body, g.user['id'],"PROJECT")
             )
-            db.commit()
+            post_id = cursor.lastrowid
+            for name in tag_names:
+                tag = cursor.execute('SELECT id FROM tag WHERE name = ?', (name,)).fetchone()
+                if not tag:
+                    cursor.execute('INSERT INTO tag (name) VALUES (?)', (name,))
+                    tag_id = cursor.lastrowid
+                else:
+                    tag_id = tag['id']
+                cursor.execute('INSERT INTO post_tag (post_id, tag_id) VALUES (?, ?)', (post_id, tag_id))
+                db.commit()
             return redirect(url_for('app/home.index'))
 
     return render_template('projects/create.html')
@@ -58,7 +89,7 @@ def get_post_unauth(id):
 
 def get_post(id, check_author=True):
     post = get_db().execute(
-        'SELECT p.id, title, body, created, author_id, username'
+        'SELECT p.id, title, p.description, body, created, author_id, username'
         ' FROM post p JOIN user u ON p.author_id = u.id'
         ' WHERE p.id = ?',
         (id,)
@@ -80,7 +111,8 @@ def update(id):
 
     if request.method == 'POST':
         title = request.form['title']
-        body = request.form['body']
+        description = request.form['description']
+        body = request.form['quill-html']
         error = None
 
         if not title:
@@ -91,9 +123,9 @@ def update(id):
         else:
             db = get_db()
             db.execute(
-                'UPDATE post SET title = ?, body = ?'
+                'UPDATE post SET title = ?,description = ?, body = ?'
                 ' WHERE id = ?',
-                (title, body, id)
+                (title, description,body, id)
             )
             db.commit()
             return redirect(url_for('app/home.index'))
@@ -152,7 +184,7 @@ def project(id):
     likes = get_db().execute("SELECT COUNT(*) FROM like WHERE post_id = ?", (id,)).fetchone()[0]
     liked_btn = ""
     try:
-        has_liked = get_db().execute('SELECT 1 FROM like WHERE user_id = ? AND post_id = ?',(g.user['id'],post_id)).fetchone()[0]
+        has_liked = get_db().execute('SELECT 1 FROM like WHERE user_id = ? AND post_id = ?',(g.user['id'],id)).fetchone()[0]
     except:
         has_liked = 0
     if has_liked < 1:
@@ -195,16 +227,16 @@ def likepost():
         get_db().execute("INSERT INTO like (user_id, post_id) VALUES (?, ?)",
                    (g.user['id'], post_id))
         get_db().commit()
-        responce = jsonify(
+        response = jsonify(
             number=get_db().execute("SELECT COUNT(*) FROM like WHERE post_id = ?", (post_id,)).fetchone()[0],
             btn_text="Unlike")
 
     else:
         get_db().execute('DELETE FROM like WHERE user_id = ? AND post_id = ?',(g.user['id'],post_id))
         get_db().commit()
-        responce = jsonify(number = get_db().execute("SELECT COUNT(*) FROM like WHERE post_id = ?", (post_id,)).fetchone()[0], btn_text = "Like")
-    print(responce)
-    return responce
+        response = jsonify(number = get_db().execute("SELECT COUNT(*) FROM like WHERE post_id = ?", (post_id,)).fetchone()[0], btn_text = "Like")
+    print(response)
+    return response
 
 
 @bp.route('/likecomment',methods=['POST'])
@@ -221,13 +253,13 @@ def likecomment():
         get_db().execute("INSERT INTO like (user_id, comment_id) VALUES (?, ?)",
                    (g.user['id'], comment_id))
         get_db().commit()
-        responce = jsonify(
+        response = jsonify(
             number=get_db().execute("SELECT COUNT(*) FROM like WHERE comment_id = ?", (comment_id,)).fetchone()[0],
             btn_text="Unlike")
 
     else:
         get_db().execute('DELETE FROM like WHERE user_id = ? AND comment_id = ?',(g.user['id'],comment_id))
         get_db().commit()
-        responce = jsonify(number = get_db().execute("SELECT COUNT(*) FROM like WHERE comment_id = ?", (comment_id,)).fetchone()[0], btn_text = "Like")
-    print(responce)
-    return responce, 200
+        response = jsonify(number = get_db().execute("SELECT COUNT(*) FROM like WHERE comment_id = ?", (comment_id,)).fetchone()[0], btn_text = "Like")
+    print(response)
+    return response, 200

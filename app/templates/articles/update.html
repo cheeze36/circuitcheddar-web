@@ -23,7 +23,7 @@
         <div id="editor">
 
         </div>
-        <p id="hidden_body" hidden value="dog">{{ request.form['body'] or post['body'] }}</p>
+        <p id="hidden_body" hidden >{{ request.form['body'] or post['body'] }}</p>
     <input type="submit" value="Save">
       <script src="{{ url_for('static', filename='./scripts/editor.js') }}">
         </script>
