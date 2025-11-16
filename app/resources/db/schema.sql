@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS post;
-DROP TABLE IF EXISTS project_comments;
+DROP TABLE IF EXISTS post_comments;
 DROP TABLE IF EXISTS comment_reply;
 DROP TABLE IF EXISTS notification;
 DROP TABLE IF EXISTS follower;
