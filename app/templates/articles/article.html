@@ -7,7 +7,7 @@
 {% block content %}
 <button class="like_btn" name="post_like_submit" id='likebtn'> {{ liked_btn }} {{ likes }} </button>
 <hr>
-<span name="projectBody" id="projectBody">{{ post['body'] | safe}}</span>
+<span class="projectBody" name="projectBody" id="projectBody">{{ post['body'] | safe}}</span>
 <hr>
 <input type="hidden" id="post_id" value="{{ post['id'] }}">
 <div>

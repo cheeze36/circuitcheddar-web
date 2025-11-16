@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block header %}
+  <h1>Profile Settings</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="POST">
+    <div>
+      <label for="username">Username:</label>
+      <input type="text" name="username" value="{{ user.username }}" required>
+    </div>
+    <div>
+      <label for="email">Email:</label>
+      <input type="email" value="{{ user.email }}" readonly>
+    </div>
+    <div>
+      <label for="password">New Password:</label>
+      <input type="password" name="password" placeholder="Leave blank to keep current">
+    </div>
+    <div>
+      <label for="confirm">Confirm Password:</label>
+      <input type="password" name="confirm" placeholder="Confirm new password">
+    </div>
+    <button type="submit">Update Profile</button>
+  </form>
+{% endblock %}

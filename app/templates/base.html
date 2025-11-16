@@ -1,10 +1,17 @@
 <!doctype html>
 
 
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- ✅ Mobile-friendly scaling -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>{% block title %}{% endblock %} - CircuitCheddar</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='./styles.css') }}">
+</head>
+<body>
 
-<title>{% block title %}{% endblock %} - CircuitCheddar</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='./styles.css') }}">
 <nav class="topnav">
 	<div class="navcenter">
 
@@ -15,26 +22,44 @@
         </div>
         <br>
         <hr>
-        <div class="navbar">
-            <ul>
-                <li><a href="{{ url_for('app/home.index') }}">Home</a></li>
-                <li><a href="{{ url_for('app/projects.browse') }}">Projects</a></li>
-                <li><a href="{{ url_for('app/articles.browse') }}">articles</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li><a href="{{ url_for('app/home.about') }}">About</a></li>
-            </ul>
-            <div class="navlogin">
-                <ul>
-                    {% if g.user %}
-                      <li><span><a href="{{ url_for('app/auth.logout') }}">{{ g.user['username'] }}</a>
-                      <li><a href="{{ url_for('app/auth.logout') }}">Log Out</a></span>
-                    {% else %}
-                      <li><span><a href="{{ url_for('app/auth.register') }}">Register</a>
-                      <li><a href="{{ url_for('app/auth.login') }}">Log In</a></span>
-                    {% endif %}
-                 </ul>
-	        </div>
-        </div>
+       <div class="navbar">
+  <!-- Hamburger toggle button -->
+  <button class="hamburger" id="hamburger">&#9776;</button>
+
+  <!-- Navigation links -->
+  <ul id="nav-links">
+    <li><a href="{{ url_for('app/home.index') }}">Home</a></li>
+    <li><a href="{{ url_for('app/projects.browse') }}">Projects</a></li>
+    <li><a href="{{ url_for('app/articles.browse') }}">Articles</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="{{ url_for('app/home.about') }}">About</a></li>
+  </ul>
+
+  <!-- Login/Register/Profile -->
+  <div class="navlogin">
+    <ul>
+      {% if g.user %}
+        <li><span><a href="{{ url_for('app/home.profile') }}">{{ g.user['username'] }}</a></span></li>
+        <li><a href="{{ url_for('app/auth.logout') }}">Log Out</a></li>
+      {% else %}
+        <li><span><a href="{{ url_for('app/auth.register') }}">Register</a></span></li>
+        <li><a href="{{ url_for('app/auth.login') }}">Log In</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</div>
+
+<script>
+  // Toggle nav links on mobile
+  document.addEventListener("DOMContentLoaded", function() {
+    const hamburger = document.getElementById("hamburger");
+    const navLinks = document.getElementById("nav-links");
+
+    hamburger.addEventListener("click", () => {
+      navLinks.classList.toggle("show");
+    });
+  });
+</script>
 
   	</div>
 

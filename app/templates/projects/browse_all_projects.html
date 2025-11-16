@@ -2,7 +2,7 @@
 
 {% block header %}
   <h1>{% block title %}Browse Projects{% endblock %}</h1>
-  {% if g.user %}
+  {% if g.user and (user_role == "CONTRIB" or user_role == "ADMIN")%}
     <a class="action" href="{{ url_for('app/projects.create') }}">New</a>
   {% endif %}
 {% endblock %}
@@ -34,6 +34,7 @@
         </div>
         {% if g.user['id'] == post['author_id'] %}
           <a class="action" href="{{ url_for('app/projects.update', id=post['id']) }}">Edit</a>
+          <a class="action" href="{{ url_for('app/projects.delete', id=post['id']) }}">Delete</a>
         {% endif %}
       </header>
         <span><p>{{ post['description'] }}</p></span>

@@ -17,6 +17,11 @@ def browse():
 
     # Fetch all tags for dropdown
     all_tags = db.execute('SELECT name FROM tag ORDER BY name ASC').fetchall()
+    try:
+        user_role = db.execute('SELECT role FROM user WHERE id = ?', (g.user['id'],)).fetchone()[0]
+    except TypeError:
+        user_role = "NONE"
+
 
     query = '''
         SELECT DISTINCT p.id, p.title, p.description, p.body, p.created, p.author_id, u.username
@@ -38,7 +43,7 @@ def browse():
     query += ' ORDER BY p.created DESC'
 
     posts = db.execute(query, params).fetchall()
-    return render_template('articles/browse_all_articles.html', posts=posts)
+    return render_template('articles/browse_all_articles.html', posts=posts, all_tags=all_tags, selected_tag=tag_filter,user_role=user_role)
 
 
 @bp.route('/create', methods=('GET', 'POST'))
