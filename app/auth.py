@@ -106,3 +106,30 @@ def login_required(view):
             return redirect(url_for('app/auth.login'))
         return view(**kwargs)
     return wrapped_view
+
+""" UTILITIES """
+def reset_password(user_id: int, new_password: str, confirm: str):
+    """
+    Validate and update the password for a given user.
+    Returns (True, None) on success or (False, error_message) on failure.
+    """
+    db = get_db()
+    error = None
+
+    if not new_password:
+        return False, "Password is required."
+
+    if not re.match(PASSWORD_REGEX, new_password):
+        error = "Password must be at least 8 characters long and include a number."
+    elif new_password != confirm:
+        error = "Passwords do not match."
+
+    if error:
+        return False, error
+
+    db.execute(
+        "UPDATE user SET password = ? WHERE id = ?",
+        (generate_password_hash(new_password), user_id)
+    )
+    db.commit()
+    return True, None

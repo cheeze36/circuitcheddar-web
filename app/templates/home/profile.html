@@ -3,27 +3,102 @@
 {% block title %}Profile{% endblock %}
 
 {% block header %}
-  <h1>Profile Settings</h1>
+  <h1>Profile</h1>
 {% endblock %}
 
 {% block content %}
-  <form method="POST">
-    <div>
-      <label for="username">Username:</label>
-      <input type="text" name="username" value="{{ user.username }}" required>
-    </div>
-    <div>
-      <label for="email">Email:</label>
-      <input type="email" value="{{ user.email }}" readonly>
-    </div>
-    <div>
-      <label for="password">New Password:</label>
-      <input type="password" name="password" placeholder="Leave blank to keep current">
-    </div>
-    <div>
-      <label for="confirm">Confirm Password:</label>
-      <input type="password" name="confirm" placeholder="Confirm new password">
-    </div>
-    <button type="submit">Update Profile</button>
-  </form>
+  <section>
+    <h2>Hello, {{ user.username }}</h2>
+    <p>Email: {{ user.email }}</p>
+  </section>
+
+  <hr>
+
+  <section>
+    <h3>Update Profile</h3>
+    <form method="POST">
+      <div>
+        <label for="username">Username:</label>
+        <input type="text" name="username" value="{{ user.username }}" required>
+      </div>
+      <div>
+        <label for="email">Email:</label>
+        <input type="email" value="{{ user.email }}" readonly>
+      </div>
+      <div>
+        <label for="password">New Password:</label>
+        <input type="password" name="password" placeholder="Leave blank to keep current">
+      </div>
+      <div>
+        <label for="confirm">Confirm Password:</label>
+        <input type="password" name="confirm" placeholder="Confirm new password">
+      </div>
+      <button type="submit">Save Changes</button>
+    </form>
+  </section>
+
+  <hr>
+
+  <section>
+    <h3>My Posts</h3>
+    {% if my_posts %}
+      <ul>
+        {% for p in my_posts %}
+          <li>
+            {% if p.type == 'PROJECT' %}
+              <a href="{{ url_for('app/projects.project', id=p.id) }}">{{ p.title }}</a>
+            {% else %}
+              <a href="{{ url_for('app/articles.article', id=p.id) }}">{{ p.title }}</a>
+            {% endif %}
+            <span> — {{ p.description|truncate(200, True, '...') }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+      <p><a href="{{ url_for('app/home.profile_my_posts') }}">View all my posts</a></p>
+    {% else %}
+      <p>No posts yet.</p>
+    {% endif %}
+  </section>
+
+  <section>
+    <h3>Posts I Liked</h3>
+    {% if liked_posts %}
+      <ul>
+        {% for p in liked_posts %}
+          <li>
+            {% if p.type == 'PROJECT' %}
+              <a href="{{ url_for('app/projects.project', id=p.id) }}">{{ p.title }}</a>
+            {% else %}
+              <a href="{{ url_for('app/articles.article', id=p.id) }}">{{ p.title }}</a>
+            {% endif %}
+            <span> — {{ p.description|truncate(200, True, '...') }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+      <p><a href="{{ url_for('app/home.profile_liked_posts') }}">View all liked posts</a></p>
+    {% else %}
+      <p>No likes yet.</p>
+    {% endif %}
+  </section>
+
+  <section>
+    <h3>Posts I Commented On</h3>
+    {% if commented_posts %}
+      <ul>
+        {% for p in commented_posts %}
+          <li>
+            {% if p.type == 'PROJECT' %}
+              <a href="{{ url_for('app/projects.project', id=p.id) }}">{{ p.title }}</a>
+            {% else %}
+              <a href="{{ url_for('app/articles.article', id=p.id) }}">{{ p.title }}</a>
+            {% endif %}
+            <span> — {{ p.description|truncate(200, True, '...') }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+      <p><a href="{{ url_for('app/home.profile_commented_posts') }}">View all commented posts</a></p>
+    {% else %}
+      <p>No comments yet.</p>
+    {% endif %}
+  </section>
 {% endblock %}
