@@ -15,6 +15,9 @@
         <label for="description">Description</label>
         <br>
         <textarea name="description" id="description" rows="3" cols="150">{{ request.form['description'] or post['description'] }}</textarea>
+         <br><br>
+      <label for="tags">Tags (comma-separated)</label>
+      <input type="text" name="tags" id="tags" value="{{ request.form['tags'] or existing_tags }}">
       <input type="hidden" name="quill-html" id="quill-html">
         <br>
         <br>
