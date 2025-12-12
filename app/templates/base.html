@@ -33,6 +33,9 @@
     <li><a href="{{ url_for('app/articles.browse') }}">Articles</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="{{ url_for('app/home.about') }}">About</a></li>
+    {% if g.user and g.user['role'] == 'ADMIN' %}
+      <li><a href="{{ url_for('app/admin.admin_portal') }}">Admin</a></li>
+    {% endif %}
   </ul>
 
   <!-- Login/Register/Profile -->

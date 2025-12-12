@@ -109,6 +109,17 @@ def get_post(id, check_author=True):
 
     return post
 
+def get_post_tags(post_id: int) -> list[str]:
+    rows = get_db().execute(
+        'SELECT t.name '
+        'FROM tag t '
+        'JOIN post_tag pt ON pt.tag_id = t.id '
+        'WHERE pt.post_id = ? '
+        'ORDER BY t.name ASC',
+        (post_id,),
+    ).fetchall()
+    return [r['name'] for r in rows]
+
 
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
 @login_required
@@ -118,6 +129,8 @@ def update(id):
     if request.method == 'POST':
         title = request.form['title']
         description = request.form['description']
+        raw_tags = request.form.get('tags', '')
+        tag_names = [t.strip().lower() for t in raw_tags.split(',') if t.strip()]
         body = request.form['quill-html']
         error = None
 
@@ -128,15 +141,32 @@ def update(id):
             flash(error)
         else:
             db = get_db()
-            db.execute(
+            cursor = db.cursor()
+
+            cursor.execute(
                 'UPDATE post SET title = ?,description = ?, body = ?'
                 ' WHERE id = ?',
-                (title, description,body, id)
+                (title, description, body, id)
             )
+
+            cursor.execute('DELETE FROM post_tag WHERE post_id = ?', (id,))
+            for name in tag_names:
+                tag = cursor.execute('SELECT id FROM tag WHERE name = ?', (name,)).fetchone()
+                if not tag:
+                    cursor.execute('INSERT INTO tag (name) VALUES (?)', (name,))
+                    tag_id = cursor.lastrowid
+                else:
+                    tag_id = tag['id']
+                cursor.execute(
+                    'INSERT INTO post_tag (post_id, tag_id) VALUES (?, ?)',
+                    (id, tag_id)
+                )
+
             db.commit()
             return redirect(url_for('app/home.index'))
 
-    return render_template('articles/update.html', post=post)
+    existing_tags = ", ".join(get_post_tags(id))
+    return render_template('articles/update.html', post=post, existing_tags=existing_tags)
 
 def get_comments(id):
      comments = get_db().execute(

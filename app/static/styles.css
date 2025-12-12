@@ -18,6 +18,7 @@ html, body
         margin: 0; /* Remove default margin for full coverage */
         padding: 0; /* Remove default padding for full coverage */
         font-family: Verdana;
+
 }
 
 .like-comment, .like_btn
@@ -150,21 +151,32 @@ body
     flex-wrap: nowrap;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    padding: 25px;
     scrollbar-width: 10%;
     scrollbar-color: var(--lightorange);
-    margin-inline: 10%;
+
+}
+@media (min-width: 100px) {
+    .scrolling-wrapper
+    {
+        padding: 5px;
+        margin-inline: 2%;
+
+    }
 }
 .card {
     flex: 1 1 100%;          /* full width on small screens */
     margin: 10px;
+    max-width; 300px
+    max-height: 200px;
+    overflow-y: scroll;
+    overflow-x: hidden;
     padding: 20px;
     border-radius: 15px;
     border-style: double;
     color: var(--lightwhite);
     background-image: linear-gradient(to bottom, var(--darkpurple), var(--lightPurple));
     box-sizing: border-box;
-    max-height: 50%;
+
 }
 
 /* Headings inside cards */
@@ -182,13 +194,24 @@ body
     text-shadow: 2px 1px var(--darkpurple), -2px -1px var(--darkpurple);
     text-decoration: none;
 }
+/* Responsive breakpoints */
+@media (min-width: 100px) {
+    .card {
+        flex: 0 0 78%;       /* two per row on small tablets */
+        max-width: 300px;
+        max-height: 200px;
+    }
+    .card h1 {
+        font-size: 1.2rem;
+    }
+}
 
 /* Responsive breakpoints */
 @media (min-width: 600px) {
     .card {
         flex: 0 0 58%;       /* two per row on small tablets */
-        max-width: 58%;
-        max-height: 50%;
+        max-width: 400px;
+        max-height: 300px;
     }
     .card h1 {
         font-size: 1.2rem;
@@ -198,8 +221,9 @@ body
 @media (min-width: 1024px) {
     .card {
         flex: 0 0 33%;       /* four per row on desktop */
-        max-width: 33%;
-        max-height: 40%;
+        max-width: 500px;
+        max-height: 600px;
+
     }
     .card h1 {
         font-size: 1.6rem;
@@ -315,11 +339,35 @@ footer
     justify-content: center;
     background: var(--darkpurple);
     color: var(--lightorange);
+
 }
 
-.content
-{
-    margin-inline: 10%;
+
+@media (min-width: 100px) {
+    .content
+    {
+        margin-inline: 2%;
+        min-height:80vh;
+
+    }
+}
+@media (min-width: 600px) {
+    .content
+    {
+        margin-inline: 5%;
+        min-height:80vh;
+
+
+    }
+}
+@media (min-width: 1024px) {
+    .content
+    {
+        margin-inline: 10%;
+        min-height:80vh;
+
+
+    }
 }
 
 .ql-code-block-container
