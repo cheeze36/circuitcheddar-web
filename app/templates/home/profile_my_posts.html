@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}My Posts{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="project_browse_list">
+  {% if posts %}
+    {% for post in posts %}
+      <div class="card">
+        <article class="post">
+          <header>
+            <div>
+              <h1>
+                {% if post.type == 'PROJECT' %}
+                  <a href="{{ url_for('app/projects.project', id=post.id) }}">{{ post.title }}</a>
+                {% else %}
+                  <a href="{{ url_for('app/articles.article', id=post.id) }}">{{ post.title }}</a>
+                {% endif %}
+              </h1>
+              <div class="about">by {{ post.username }} on {{ post.created.strftime('%Y-%m-%d') }}</div>
+            </div>
+          </header>
+          <span><p>{{ post.description|truncate(200, True, '...') }}</p></span>
+        </article>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No posts to show.</p>
+  {% endif %}
+</div>
+{% endblock %}

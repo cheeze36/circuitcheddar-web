@@ -22,18 +22,19 @@
         </tr>
         {% for user in users %}
         <tr>
-            <td>{{ user["username"] }}</td>
-            <td>{{ user["email"] }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.role }}</td>
             <td>
                 <form method="post" action="{{ url_for('app/admin.set_user_role', user_id=user['id']) }}">
                     <select name="role" class="selection_options">
-                        <option value="USER" {% if user["role"] == "USER" %}selected{% endif %}>USER</option>
-                        <option value="ADMIN" {% if user["role"] == "ADMIN" %}selected{% endif %}>ADMIN</option>
-                        <option value="CONTRIBUTOR" {% if user["role"] == "CONTRIBUTOR" %}selected{% endif %}>CONTRIBUTOR</option>
-                        <option value="EDITOR" {% if user["role"] == "EDITOR" %}selected{% endif %}>EDITOR</option>
+                        <option value="{{ user.role }}">{{ user.role }} (current)</option>
+                        {% for r in ['USER','ADMIN','CONTRIBUTOR','EDITOR'] %}
+                            {% if r != user.role %}
+                                <option value="{{ r }}">{{ r }}</option>
+                            {% endif %}
+                        {% endfor %}
                     </select>
-            </td>
-            <td>
                     <button type="submit">Save</button>
                 </form>
             </td>
